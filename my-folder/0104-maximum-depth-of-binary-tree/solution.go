@@ -1,5 +1,3 @@
-import "math"
-
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
@@ -13,5 +11,19 @@ func maxDepth(root *TreeNode) int {
         return 0
     }
     
-    return 1 + int(math.Max(float64(maxDepth(root.Left)), float64(maxDepth(root.Right))))
+    depth := 1
+    maxChildrenDepth := 0
+    
+    if root.Left != nil {
+        maxChildrenDepth = maxDepth(root.Left)
+    }
+    
+    if root.Right != nil {
+        rightDepth := maxDepth(root.Right)
+        if rightDepth > maxChildrenDepth {
+            maxChildrenDepth = rightDepth
+        }
+    }
+    
+    return depth + maxChildrenDepth
 }
