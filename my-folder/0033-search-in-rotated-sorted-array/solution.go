@@ -1,28 +1,35 @@
 func search(nums []int, target int) int {
+    if len(nums) == 0 {
+        return -1
+    }
+    
     lo, hi := 0, len(nums)-1
-    for hi >= lo + 4 {
+    // want to ensure distinct [lo..mid-1,mid,mid+1..hi]
+    for hi >= lo+4 {
         mid := lo + (hi-lo)/2
+        
         if nums[mid] == target {
             return mid
         }
         
-        sortedLo, sortedHi := lo, mid-1
-        otherLo, otherHi := mid+1, hi
-        if nums[sortedLo] > nums[sortedHi] {
-            sortedLo, sortedHi = mid+1, hi
-            otherLo, otherHi = lo, mid-1
-        }
-        
-        if target >= nums[sortedLo] && target <= nums[sortedHi] {
-            lo, hi = sortedLo, sortedHi
+        if nums[lo] < nums[mid-1] {
+            if nums[lo] <= target && target <= nums[mid-1] {
+                hi = mid-1
+            } else {
+                lo = mid+1
+            }
         } else {
-            lo, hi = otherLo, otherHi
+            if nums[mid+1] <= target && target <= nums[hi] {
+                lo = mid+1
+            } else {
+                hi = mid-1
+            }
         }
     }
     
-    for ;lo <= hi; lo++ {
-        if nums[lo] == target {
-            return lo
+    for i := lo; i <= hi; i++ {
+        if nums[i] == target {
+            return i
         }
     }
     
