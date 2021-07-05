@@ -1,22 +1,21 @@
 func maxArea(height []int) int {
-    bestArea := 0
-    for i, j := 0, len(height)-1; i < j; {
-        lowest := height[i]
-        if height[j] < height[i] {
-            lowest = height[j]
-        }
-            
-        area := lowest * (j-i)
-        if area > bestArea {
-            bestArea = area
+    maxArea := 0
+    lo, hi := 0, len(height)-1
+    for lo < hi {
+        l := hi-lo
+        h := height[lo]
+        if height[hi] < h {
+            h = height[hi]
+            hi--
+        } else {
+            lo++
         }
         
-        if height[j] < height[i] {
-            j--
-        } else {
-            i++
+        area := h * (l)
+        if area > maxArea {
+            maxArea = area
         }
-    }   
+    }
     
-    return bestArea
+    return maxArea
 }
