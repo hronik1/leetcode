@@ -1,15 +1,15 @@
 func longestValidParentheses(s string) int {
     var stack Stack
-    stack.Push(-1)
     maxLength := 0
+    stack.Push(-1)
     
     for i, r := range s {
         if r == '(' {
             stack.Push(i)
         } else if r == ')' {
-            _, _ = stack.Pop()
-            if top, ok := stack.Peak(); ok {
-                curLength := i-top
+            stack.Pop()
+            if open, ok := stack.Peak(); ok {
+                curLength := i - open
                 if curLength > maxLength {
                     maxLength = curLength
                 }
@@ -46,12 +46,13 @@ func (s *Stack) Pop() (int, bool) {
 	}
 }
 
+// Remove and return top element of stack. Return false if stack is empty.
 func (s *Stack) Peak() (int, bool) {
-    if s.IsEmpty() {
+	if s.IsEmpty() {
 		return -1, false
-    } else {
-        index := len(*s) - 1 // Get the index of the top most element.
+	} else {
+		index := len(*s) - 1 // Get the index of the top most element.
 		element := (*s)[index] // Index into the slice and obtain the element.
 		return element, true
-    }
+	}
 }
