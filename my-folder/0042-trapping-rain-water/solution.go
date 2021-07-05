@@ -3,38 +3,35 @@ func trap(height []int) int {
         return 0
     }
     
-    maxLeft := make([]int, len(height))
-    maxLeft[0] = height[0]
+    maxHeightLeft := make([]int, len(height))
+    maxHeightLeft[0] = height[0]
     for i := 1; i < len(height); i++ {
-        max := height[i]
-        if maxLeft[i-1] > max {
-            max = maxLeft[i-1]
+        maxHeightLeft[i] = maxHeightLeft[i-1]
+        if height[i] > maxHeightLeft[i] {
+            maxHeightLeft[i] = height[i]
         }
-        
-        maxLeft[i] = max
     }
     
-    maxRight := make([]int, len(height))
-    maxRight[len(height)-1] = height[len(height)-1]
+    maxHeightRight := make([]int, len(height))
+    maxHeightRight[len(height)-1] = height[len(height)-1]
     for i := len(height)-2; i >= 0; i-- {
-        max := height[i]
-        if maxRight[i+1] > max {
-            max = maxRight[i+1]
+        maxHeightRight[i] = maxHeightRight[i+1]
+        if height[i] > maxHeightRight[i] {
+            maxHeightRight[i] = height[i]
         }
-        
-        maxRight[i] = max
     }
     
-    out := 0
-    for i := 0; i < len(height); i++ {
-        minMax := maxLeft[i]
-        if maxRight[i] < minMax {
-            minMax = maxRight[i]
+    vol := 0
+    for i := 0; i < len(height)-1; i++ {
+        minHeight := maxHeightLeft[i]
+        if minHeight > maxHeightRight[i] {
+            minHeight = maxHeightRight[i]
         }
         
-        out += (minMax-height[i])
+        if minHeight > height[i] {
+            vol += (minHeight-height[i])
+        }
     }
     
-    return out
-    
+    return vol
 }
