@@ -1,53 +1,55 @@
-import "math/rand"
-
 type RandomizedSet struct {
-    s map[int]int
-    l []int
+    Index map[int]int
+    Items []int
 }
 
 
 /** Initialize your data structure here. */
 func Constructor() RandomizedSet {
-    return RandomizedSet {
-        s: map[int]int{},
-        l: []int{},
+    return RandomizedSet{
+        Index: map[int]int{},
+        Items: []int{},
     }
 }
 
 
 /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
 func (this *RandomizedSet) Insert(val int) bool {
-    if _, ok := this.s[val]; ok {
+    if _, ok := this.Index[val]; ok {
         return false
     }
     
-    this.s[val] = len(this.l)
-    this.l = append(this.l, val)
+    l := len(this.Items)
+    this.Index[val] = l
+    this.Items = append(this.Items, val)
+    
     return true
 }
 
 
 /** Removes a value from the set. Returns true if the set contained the specified element. */
 func (this *RandomizedSet) Remove(val int) bool {
-    if index, ok := this.s[val]; ok {
-        if index != len(this.l) - 1 {
-            temp := this.l[len(this.l) - 1]
-            this.s[temp] = index
-            this.l[index] = temp
+    if i, ok := this.Index[val]; !ok {
+        return false
+    } else {
+        // swap this item with last item, as removing from the end of an end of a slice is easy
+        if i != len(this.Items)-1 {
+            lastVal := this.Items[len(this.Items)-1]
+            this.Index[lastVal] = i
+            this.Items[i] = lastVal
         }
-        delete(this.s, val)
-        this.l = this.l[:len(this.l) - 1]
+        
+        delete(this.Index, val)
+        this.Items = this.Items[:len(this.Items)-1]
+        
         return true
     }
-    
-    return false
 }
 
 
 /** Get a random element from the set. */
 func (this *RandomizedSet) GetRandom() int {
-    randI := rand.Intn(len(this.l))
-    return this.l[randI]
+    return this.Items[rand.Intn(len(this.Items))]
 }
 
 
