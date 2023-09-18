@@ -1,15 +1,15 @@
 func maximumWealth(accounts [][]int) int {
     maxWealth := 0
     for _, banks := range accounts {
-        curWealth := 0
-        for _, balance := range banks {
-            curWealth += balance
+        wealth := 0
+        for _, v := range banks {
+            wealth = wealth + v
         }
-        
-        if curWealth > maxWealth {
-            maxWealth = curWealth
-        }
+
+        if wealth > maxWealth {
+            maxWealth = wealth
+        } 
     }
-    
+
     return maxWealth
 }
