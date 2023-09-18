@@ -1,12 +1,14 @@
 func runningSum(nums []int) []int {
-    if len(nums) < 1 {
+    if len(nums) == 0 {
         return []int{}
     }
-    
-    sums := []int{nums[0]}
-    for i := 1; i < len(nums); i++ {
-        sums = append(sums, sums[i-1] + nums[i])
-    }
-    
-    return sums
+
+    l := len(nums)
+    out := make([]int, l)
+    out[0] = nums[0]
+	for i := 1; i < l; i++ {
+		out[i] = nums[i] + out[i-1]
+	}
+
+    return out
 }
