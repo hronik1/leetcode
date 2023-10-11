@@ -8,7 +8,7 @@
  */
 func maxDepth(root *TreeNode) int {
     if root == nil {
-        return 0
+         return 0
     }
     
     maxChildDepth := maxDepth(root.Left)
