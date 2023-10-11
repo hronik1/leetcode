@@ -1,24 +1,20 @@
-func fib(N int) int {
-    if N < 2 {
-        return N
+func fib(n int) int {
+    if n == 0 || n == 1 {
+        return n
     }
     
-    memo := map[int]int {
-        0: 0,
-        1: 1,
-    }
+    memo := []int{0, 1}
     
-    return fibMemo(N, memo)
+    return fibHelper(n, memo)
 }
 
-func fibMemo(N int, memo map[int]int) int {
-    if v, ok := memo[N]; ok {
-        return v
+func fibHelper(n int, memo []int) int {
+    if len(memo) > n {
+        return memo[n]
     }
     
-    v := fibMemo(N-1, memo) + fibMemo(N-2, memo)
-    memo[N] = v
-    return v
+    f := fibHelper(n-1, memo) + fibHelper(n-2, memo)
+    memo = append(memo, f)
+    
+    return f
 }
-
-
