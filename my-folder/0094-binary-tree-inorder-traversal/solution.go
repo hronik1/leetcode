@@ -8,18 +8,17 @@
  */
 func inorderTraversal(root *TreeNode) []int {
     res := []int{}
-    res = helper(root, res)
+    inorderHelper(root, &res)
+    
     return res
 }
 
-func helper(root *TreeNode, res []int) []int {
+func inorderHelper(root *TreeNode, res *[]int) {
     if root == nil {
-        return res
+        return
     }
     
-    res = helper(root.Left, res)
-    res = append(res, root.Val)
-    res = helper(root.Right, res)
-    
-    return res
+    inorderHelper(root.Left, res)
+    *res = append(*res, root.Val)
+    inorderHelper(root.Right, res)
 }
