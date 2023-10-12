@@ -10,50 +10,58 @@ func isValidBST(root *TreeNode) bool {
     if root == nil {
         return true
     }
-     
-    rootOut := helper(root)
-    return rootOut.IsValid
+    
+    if root.Left != nil {
+        maxLeftVal := maxVal(root.Left)
+        if maxLeftVal >= root.Val || !isValidBST(root.Left) {
+            return false
+        }
+    }
+    
+    if root.Right != nil {
+        minRightVal := minVal(root.Right)
+        if minRightVal <= root.Val || !isValidBST(root.Right) {
+            return false
+        }
+    }
+    
+    return true
 }
 
-type HelperOut struct {
-    IsValid bool
-    Min *int
-    Max *int
+func maxVal(root *TreeNode) int {
+    res := root.Val
+    if root.Left != nil {
+        leftVal := maxVal(root.Left)
+        if leftVal > res {
+            res = leftVal
+        }
+    }
+    
+    if root.Right != nil {
+        rightVal := maxVal(root.Right)
+        if rightVal > res {
+            res = rightVal
+        }
+    }
+    
+    return res
 }
 
-func helper(root *TreeNode) HelperOut {
-    if root == nil {
-        return HelperOut{IsValid: true}
-    }
-    leftOut := helper(root.Left)
-    rightOut := helper(root.Right)
-    
-    out := HelperOut{IsValid: false}
-    if !leftOut.IsValid || !rightOut.IsValid {
-        return out
+func minVal(root *TreeNode) int {
+    res := root.Val
+    if root.Left != nil {
+        leftVal := minVal(root.Left)
+        if leftVal < res {
+            res = leftVal
+        }
     }
     
-    if leftOut.Max != nil && *leftOut.Max >= root.Val {
-        return out
+    if root.Right != nil {
+        rightVal := minVal(root.Right)
+        if rightVal < res {
+            res = rightVal
+        }
     }
     
-    if rightOut.Min != nil && *rightOut.Min <= root.Val {
-        return out
-    }
-    
-    out = HelperOut{
-        IsValid: true,
-        Min: &root.Val,
-        Max: &root.Val,
-    }
-    
-    if leftOut.Min != nil {
-        out.Min = leftOut.Min
-    }
-    if rightOut.Max != nil {
-        out.Max = rightOut.Max
-    }
-    
-    return out
+    return res
 }
-
