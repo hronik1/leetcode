@@ -11,29 +11,28 @@ func isSymmetric(root *TreeNode) bool {
         return true
     }
     
-    curLevel := []*TreeNode{root}
-    nonNilChildren := true
-    for nonNilChildren {
-        nonNilChildren = false
-        nextLevel := []*TreeNode{}
-        for i, node := range curLevel {
-            if node != nil {
-                nonNilChildren = true
-                symNode := curLevel[len(curLevel)-1-i]
-                if symNode == nil || symNode.Val != node.Val {
-                    return false
-                }
-                
-                nextLevel = append(nextLevel, []*TreeNode{node.Left, node.Right}...)
-            } else {
-                nextLevel = append(nextLevel, []*TreeNode{nil, nil}...)
-            }
-        }
-        
-        curLevel = nextLevel
-    }
+    return isSymmetricHelper([]*TreeNode{root})
+}
 
-    return true
+func isSymmetricHelper(level []*TreeNode) bool {
+    onlyNils := true
+    nextLevel := []*TreeNode{}
+    for i, node := range level {
+        mirror := level[len(level)-1-i]
+        if node != nil {
+            onlyNils = false
+            if mirror == nil || node.Val != mirror.Val {
+                return false
+            }
+            
+            nextLevel = append(nextLevel, node.Left)
+            nextLevel = append(nextLevel, node.Right)
+        }
+    }
     
+    if onlyNils {
+        return true
+    }
     
+    return isSymmetricHelper(nextLevel)
 }
