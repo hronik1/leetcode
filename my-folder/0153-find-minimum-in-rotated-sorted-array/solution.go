@@ -1,29 +1,23 @@
 func findMin(nums []int) int {
-    lo, hi := 0, len(nums)-1
-    
-    for hi >= lo+4 {
-        if nums[lo] <= nums[hi] {
-            return nums[lo]
-        }
-        
+    lo := 0
+    hi := len(nums) - 1
+    for lo <= hi - 2 { // guarantees unique lo, mid, and hi indices, which makes boundary conditions easier
         mid := lo + (hi-lo)/2
-        if nums[mid] < nums[mid-1] {
+        if nums[mid-1] > nums[mid] && nums[mid+1] > nums[mid] {
             return nums[mid]
-        }
-        
-        if nums[lo] < nums[mid-1] {
-            lo = mid+1
+        } else if nums[hi] > nums[mid] {
+            hi = mid - 1
         } else {
-            hi = mid-1
+            lo = mid + 1
         }
     }
     
-    lowest := nums[lo]
-    for ; lo <= hi; lo++ {
-        if nums[lo] < lowest {
-            lowest = nums[lo]
+    min := nums[lo]
+    for i := lo; i <= hi; i += 1 {
+        if nums[i] < min {
+            min = nums[i]
         }
     }
     
-    return lowest
+    return min
 }
