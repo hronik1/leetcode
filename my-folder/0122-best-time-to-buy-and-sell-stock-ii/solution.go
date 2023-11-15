@@ -1,28 +1,13 @@
 func maxProfit(prices []int) int {
-    totalProfit := 0
-    isLong := false
-    boughtPrice := 0
-    
-    for i, price := range prices {
-        if i < len(prices) - 1 {
-            if isLong {
-                if price > prices[i+1] {
-                    totalProfit += (price - boughtPrice)
-                    isLong = false
-                }
-            } else {
-                if price < prices[i+1] {
-                    boughtPrice = price
-                    isLong = true
-                }
-            }
-        } else {
-            if isLong {
-                totalProfit += (price - boughtPrice)
-                isLong = false
-            }
+    profit := 0
+    nextPrice := prices[len(prices) - 1]
+    for i := len(prices) - 2; i >= 0; i -= 1 {
+        if dailyProfit := nextPrice - prices[i]; dailyProfit > 0 {
+            profit += dailyProfit
         }
+
+        nextPrice = prices[i]
     }
-    
-    return totalProfit
+
+    return profit
 }
