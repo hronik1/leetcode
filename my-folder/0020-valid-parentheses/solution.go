@@ -1,32 +1,35 @@
 func isValid(s string) bool {
-    stack := []rune{}
+    seen := []rune{}
     for _, v := range s {
-        v = rune(v)
         if v == '(' || v == '{' || v == '[' {
-            stack = append(stack, v)
-            continue
-        }
-        
-        if len(stack) == 0 {
-            return false
-        }
-        
-        if v == ')' {
-            if stack[len(stack)-1] != '(' {
+            seen = append(seen, v)
+        } else {
+            if len(seen) == 0 {
                 return false
             }
-        } else if v == ']' {
-            if stack[len(stack)-1] != '[' {
-                return false
-            }
-        } else if v == '}' {
-            if stack[len(stack)-1] != '{' {
+            
+            lastI := len(seen) - 1
+            popped := seen[lastI]
+            seen = seen[:lastI]
+            if !matchingPair(popped, v) {
                 return false
             }
         }
-        
-        stack = stack[:len(stack)-1]
     }
-    
-    return len(stack) == 0
+
+    if len(seen) != 0 {
+        return false
+    }
+
+    return true
+}
+
+func matchingPair(opening rune, closing rune) bool {
+    if opening == '(' {
+        return closing == ')'
+    } else if opening == '{' {
+        return closing == '}'
+    } else {
+        return closing == ']'
+    }
 }
