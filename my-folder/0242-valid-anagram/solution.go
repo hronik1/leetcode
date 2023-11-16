@@ -2,19 +2,11 @@ func isAnagram(s string, t string) bool {
     if len(s) != len(t) {
         return false
     }
-    
-    sRuneCount := map[rune]int{}
-    for _, r := range s {
-        sRuneCount[r]++
-    }
-    
-    tRuneCount := map[rune]int{}
-    for _, r := range t {
-        tRuneCount[r]++
-    }
-    
-    for r, sCount := range sRuneCount {
-        if tCount, ok := tRuneCount[r]; ok {
+
+    sCounts := byteCounts(s)
+    tCounts := byteCounts(t)
+    for b, sCount := range sCounts {
+        if tCount, ok := tCounts[b]; ok {
             if tCount != sCount {
                 return false
             }
@@ -22,6 +14,19 @@ func isAnagram(s string, t string) bool {
             return false
         }
     }
-    
+
     return true
+}
+
+func byteCounts(s string) map[rune]int {
+    mapping := map[rune]int{}
+    for _, v := range s {
+        if count, ok := mapping[v]; ok {
+            mapping[v] = count+1
+        } else {
+            mapping[v] = 1
+        }
+    }
+
+    return mapping
 }
