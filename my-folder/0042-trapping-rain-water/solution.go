@@ -1,37 +1,42 @@
+import "slices"
+
 func trap(height []int) int {
-    if len(height) == 0 {
+    if len(height) <= 2 {
         return 0
     }
-    
-    maxHeightLeft := make([]int, len(height))
-    maxHeightLeft[0] = height[0]
-    for i := 1; i < len(height); i++ {
-        maxHeightLeft[i] = maxHeightLeft[i-1]
-        if height[i] > maxHeightLeft[i] {
-            maxHeightLeft[i] = height[i]
+
+    before := maxBefore(height)
+    slices.Reverse(height)
+    after := maxBefore(height)
+    slices.Reverse(after)
+    slices.Reverse(height)
+
+    trapped := 0
+    for i, v := range height {
+        curHeight := before[i]
+        if after[i] < curHeight {
+            curHeight = after[i]
+        }
+
+        curHeight -= v
+        if curHeight > 0 {
+            trapped += curHeight
         }
     }
-    
-    maxHeightRight := make([]int, len(height))
-    maxHeightRight[len(height)-1] = height[len(height)-1]
-    for i := len(height)-2; i >= 0; i-- {
-        maxHeightRight[i] = maxHeightRight[i+1]
-        if height[i] > maxHeightRight[i] {
-            maxHeightRight[i] = height[i]
+
+    return trapped
+}
+
+func maxBefore(height []int) []int {
+    ret := []int{0}
+    for i := 1; i < len(height); i += 1 {
+        curMax := height[i-1]
+        if ret[i-1] > curMax {
+            curMax = ret[i-1]
         }
+
+        ret = append(ret, curMax)
     }
-    
-    vol := 0
-    for i := 0; i < len(height)-1; i++ {
-        minHeight := maxHeightLeft[i]
-        if minHeight > maxHeightRight[i] {
-            minHeight = maxHeightRight[i]
-        }
-        
-        if minHeight > height[i] {
-            vol += (minHeight-height[i])
-        }
-    }
-    
-    return vol
+
+    return ret
 }
