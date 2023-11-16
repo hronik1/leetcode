@@ -1,30 +1,25 @@
 import "strings"
-
-func wordPattern(pattern string, str string) bool {
-    words := strings.Split(str, " ")
+func wordPattern(pattern string, s string) bool {
+    words := strings.Split(s, " ")
     if len(pattern) != len(words) {
         return false
     }
-    
-    mapping := map[string]string{}
-    reverseMapping := map[string]string{}
-    for i := 0; i < len(pattern); i++ {
-        c := string(pattern[i])
-        if originalWord, ok := mapping[c]; ok {
-            if originalWord != words[i] {
-                return false
-            } 
-        }
-        
-        if originalC, ok := reverseMapping[words[i]]; ok {
-            if originalC != c {
+
+    wordToRune := map[string]byte{}
+    runeToWord := map[byte]string{}
+    for i, word := range words {
+        r := pattern[i]
+        if mappedWord, ok := wordToRune[word]; ok {
+            if mappedWord != r {
                 return false
             }
-        } 
-        
-        mapping[c] = words[i]
-        reverseMapping[words[i]] = c
-    }
-    
+        } else if _, ok := runeToWord[r]; ok {
+            return false
+        }
+
+        wordToRune[word] = r
+        runeToWord[r] = word
+    } 
+
     return true
 }
