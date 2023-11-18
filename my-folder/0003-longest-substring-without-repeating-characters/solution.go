@@ -1,20 +1,24 @@
 func lengthOfLongestSubstring(s string) int {
-    maxL := 0
-    startI := 0
-    seen := map[rune]int{}
-    
-    for i, r := range s {
-        if j, ok := seen[r]; ok {
-            if j >= startI {
-                startI = j+1
+    seen := map[byte]bool{}
+    bestLen := 0
+    curLen := 0
+    for i := 0; i < len(s); i += 1 {
+        if _, ok := seen[s[i]]; ok {
+            for j := i - curLen; j < i; j += 1 {
+                delete(seen, s[j])
+                curLen -= 1
+                if s[i] == s[j] {
+                    break
+                }
             }
-        } 
-        seen[r] = i
-        
-        if i-startI+1 > maxL {
-            maxL = i-startI+1
+        }
+
+        seen[s[i]] = true
+        curLen += 1
+        if curLen > bestLen {
+            bestLen = curLen
         }
     }
-    
-    return maxL
+
+    return bestLen
 }
