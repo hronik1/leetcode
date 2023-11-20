@@ -1,35 +1,33 @@
+import "cmp"
+import "slices"
+
 func merge(intervals [][]int) [][]int {
+    ret := [][]int{}
     if len(intervals) == 0 {
-        return [][]int{}
+        return ret
     }
-    // sort intervals by start time, if most over laps, merge other wise add new entry
-    sort.SliceStable(intervals, func(i, j int) bool {
-        return intervals[i][0] < intervals[j][0]
-    })
+
+    slices.SortFunc(intervals, func(a, b []int) int {
+		return cmp.Compare(a[0], b[0])
+	})
+
     
-    out := [][]int{intervals[0]}
-    for i := 1; i < len(intervals); i++ {
-        prev := out[len(out)-1]
-        cur := intervals[i]
-        if doesOverlap(prev, cur) {
-            out[len(out)-1] = merg(prev, cur)
+    curStart := intervals[0][0]
+    curEnd := intervals[0][1]
+    for i := 1; i < len(intervals); i += 1 {
+        if intervals[i][0] <= curEnd {
+            if intervals[i][1] > curEnd {
+                curEnd = intervals[i][1]
+            }
+
         } else {
-            out = append(out, cur)
+            ret = append(ret, []int{curStart, curEnd})
+            curStart = intervals[i][0]
+            curEnd = intervals[i][1]
         }
     }
-    
-    return out
-}
 
-func doesOverlap(first []int, second []int) bool {
-    return first[1] >= second[0]
-}
+    ret = append(ret, []int{curStart, curEnd})
 
-func merg(first []int, second []int) []int {
-    out := first
-    if second[1] > out[1] {
-        out[1] = second[1]
-    }
-    
-    return out
+    return ret
 }
