@@ -1,0 +1,24 @@
+func rotate(matrix [][]int)  {
+    transpose(matrix)
+    mirrorY(matrix)
+}
+
+func transpose(matrix [][]int) {
+    for i := 0; i < len(matrix); i += 1 {
+        for j := i + 1; j < len(matrix); j += 1 {
+            temp := matrix[i][j]
+            matrix[i][j] = matrix[j][i]
+            matrix[j][i] = temp
+        }
+    }
+}
+
+func mirrorY(matrix [][]int) {
+    for i := 0; i < len(matrix); i += 1 {
+        for j := 0; j < len(matrix)/2; j += 1 {
+            temp := matrix[i][j]
+            matrix[i][j] = matrix[i][len(matrix) - 1 - j]
+            matrix[i][len(matrix) - 1 - j] = temp
+        }
+    }
+}
