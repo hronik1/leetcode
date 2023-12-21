@@ -1,30 +1,31 @@
 func minCostClimbingStairs(cost []int) int {
-    memo := make([]int, len(cost)+1)
-    memo[0] = 0
-    memo[1] = 0
-    for i := 2; i <= len(cost); i++ {
-        memo[i] = -1
-    }
-    
-    return helper(cost, memo, len(cost))
+    memo := make([]int, len(cost), len(cost))
+    min := costClimbingStairs(cost, memo, 0)
+    if skipped := costClimbingStairs(cost, memo, 1); skipped < min {
+        min = skipped
+    } 
+
+    return min
 }
 
-func helper(cost []int, memo []int, i int) int {
-    if memo[i] != -1 {
-        return memo[i]
+func costClimbingStairs(cost []int, memo []int, fromStair int) int {
+    if memo[fromStair] > 0 {
+        return memo[fromStair]
     }
-    
-    helper(cost, memo, i-2)
-    helper(cost, memo, i-1)
-    
-    cost2 := memo[i-2] + cost[i-2]
-    cost1 := memo[i-1] + cost[i-1]
-    if cost2 < cost1 {
-        memo[i] = cost2
-    } else {
-        memo[i] = cost1
+
+    costFromStair := cost[fromStair]
+    if fromStair >= len(cost)-2 {
+        memo[fromStair] = costFromStair
+        return costFromStair
     }
-    
-    return memo[i]
-    
+
+    min := costClimbingStairs(cost, memo, fromStair+1)
+    if skipped := costClimbingStairs(cost, memo, fromStair+2); skipped < min {
+        min = skipped
+    }
+
+    costFromStair += min
+    memo[fromStair] = costFromStair
+
+    return costFromStair
 }
