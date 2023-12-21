@@ -1,27 +1,21 @@
 func tribonacci(n int) int {
-    if n < 2 {
-        return n
-    }
-    
-    if n == 2 {
-        return 1
-    }
-    
-    memo := map[int]int {
-        0: 0,
-        1: 1,
-        2: 1,
-    }
-    
-    return tribHelper(n, memo)
+    memo := make([]int, n+1, n+1)
+    return nth(n, memo)
 }
 
-func tribHelper(n int, memo map[int]int) int {
-    if v, ok := memo[n]; ok {
-        return v
+func nth(n int, memo []int) int {
+    if n == 0 {
+        return 0
+    } else if n < 3 {
+        return 1
     }
+
+    if memo[n] > 0 {
+        return memo[n]
+    }
+
+    sum := nth(n-3, memo) + nth(n-2, memo) + nth(n-1, memo)
+    memo[n] = sum
     
-    v := tribHelper(n-3, memo) + tribHelper(n-2, memo) + tribHelper(n-1, memo)
-    memo[n] = v
-    return v
+    return sum
 }
