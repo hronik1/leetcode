@@ -1,8 +1,16 @@
 func singleNumber(nums []int) int {
-    var bitmask uint64
-    for _, num := range nums {
-        bitmask = bitmask ^ uint64(num)
+    d := map[int]bool{}
+    for _, v := range nums {
+        if _, ok := d[v]; ok {
+            delete(d, v)
+        } else {
+            d[v] = true
+        }
     }
     
-    return int(bitmask)
+    for k, _ := range d {
+        return k
+    }
+    
+    return -1
 }
