@@ -1,33 +1,28 @@
 func longestConsecutive(nums []int) int {
-    items := map[int]bool{}
-    for _, v := range nums {
-        items[v] = true
+    numSet := map[int]bool{}
+    for _, num := range nums {
+        numSet[num] = true
     }
-    
-    longest := 0
-    for _, v := range nums {
-        // only check subsequence length from first element in potential subsequence
-        if ok := items[v-1]; ok {
+
+    bestSequenceLength := 0
+    for _, num := range nums {
+        if numSet[num-1] {
             continue
         }
-        
-        if length := consecutiveLength(v, items); length > longest {
-            longest = length
+
+        curSequenceLength := sequenceLength(num, numSet)
+        if curSequenceLength > bestSequenceLength {
+            bestSequenceLength = curSequenceLength
         }
     }
-    
-    return longest
+
+    return bestSequenceLength
 }
 
-func consecutiveLength(v int, items map[int]bool) int {
+func sequenceLength(num int, numSet map[int]bool) int {
     length := 0
-    for i := v; ; i++ {
-        if ok := items[i]; !ok {
-            break
-        }
-        
+    for i := num; numSet[i]; i++ {
         length++
     }
-    
     return length
 }
