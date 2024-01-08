@@ -1,33 +1,22 @@
+import "slices"
 func groupAnagrams(strs []string) [][]string {
-    groups := map[string][]string{}
+    mapping := map[string][]string{}
     for _, str := range strs {
-        s := []rune(str)
-        sort.Sort(sortRunes(s))
-        sorted := string(s)
-        if l, ok := groups[sorted]; ok {
-            groups[sorted] = append(l, str)
+        runes := []rune(str)
+        slices.Sort(runes)
+        s := string(runes)
+        
+        if l, ok := mapping[s]; ok {
+            mapping[s] = append(l, str)
         } else {
-            groups[sorted] = []string{str}
+            mapping[s] = []string{str}
         }
     }
-    
+
     out := [][]string{}
-    for _, v := range groups {
+    for _, v := range mapping {
         out = append(out, v)
     }
-    
+
     return out
-}
-
-type sortRunes []rune
-
-func (s sortRunes) Less(i, j int) bool {
-    return s[i] < s[j]
-}
-
-func (s sortRunes) Len() int{
-   return len(s)
-}
-func (s sortRunes) Swap(i, j int) {
-   s[i], s[j] = s[j], s[i]
 }
