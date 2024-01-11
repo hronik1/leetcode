@@ -1,19 +1,19 @@
 func climbStairs(n int) int {
-    return climbStairsDP(n, map[int]int{})
+    memo := map[int]int {
+        1: 1,
+        2: 2,
+    }
+
+    return climbStairsMemo(n, memo)
 }
 
-func climbStairsDP(n int, memo map[int]int) int {
-    if res, ok := memo[n]; ok {
-        return res
+func climbStairsMemo(n int, memo map[int]int) int {
+    if v, ok := memo[n]; ok {
+        return v
     }
+
+    v := climbStairsMemo(n-2, memo) + climbStairsMemo(n-1, memo)
+    memo[n] = v
     
-    if n < 3 {
-        memo[n] = n
-        return n
-    }
-    
-    out := climbStairsDP(n-1, memo) + climbStairsDP(n-2, memo)
-    memo[n] = out
-    
-    return out
+    return v
 }
