@@ -1,55 +1,53 @@
 type RandomizedSet struct {
-    Index map[int]int
-    Items []int
+    index map[int]int
+    orderedItems []int
 }
 
 
-/** Initialize your data structure here. */
 func Constructor() RandomizedSet {
     return RandomizedSet{
-        Index: map[int]int{},
-        Items: []int{},
+        index: map[int]int{},
+        orderedItems: []int{},
     }
 }
 
 
-/** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
 func (this *RandomizedSet) Insert(val int) bool {
-    if _, ok := this.Index[val]; ok {
+    if _, ok := this.index[val]; ok {
         return false
     }
-    
-    l := len(this.Items)
-    this.Index[val] = l
-    this.Items = append(this.Items, val)
-    
+
+    this.orderedItems = append(this.orderedItems, val)
+    this.index[val] = len(this.orderedItems)-1
+
     return true
 }
 
 
-/** Removes a value from the set. Returns true if the set contained the specified element. */
 func (this *RandomizedSet) Remove(val int) bool {
-    if i, ok := this.Index[val]; !ok {
+    i, ok := this.index[val]
+    if !ok {
         return false
-    } else {
-        // swap this item with last item, as removing from the end of an end of a slice is easy
-        if i != len(this.Items)-1 {
-            lastVal := this.Items[len(this.Items)-1]
-            this.Index[lastVal] = i
-            this.Items[i] = lastVal
-        }
-        
-        delete(this.Index, val)
-        this.Items = this.Items[:len(this.Items)-1]
-        
-        return true
     }
+
+    lastItem := this.orderedItems[len(this.orderedItems) - 1]
+    this.orderedItems[i] = lastItem
+    this.index[lastItem] = i
+    
+    delete(this.index, val)
+    this.orderedItems = this.orderedItems[:len(this.orderedItems) - 1] 
+
+    return true
 }
 
 
-/** Get a random element from the set. */
 func (this *RandomizedSet) GetRandom() int {
-    return this.Items[rand.Intn(len(this.Items))]
+    if len(this.orderedItems) == 0 {
+        return -1
+    }
+
+    randI := rand.Int31n(int32(len(this.orderedItems)))
+    return this.orderedItems[randI] 
 }
 
 
