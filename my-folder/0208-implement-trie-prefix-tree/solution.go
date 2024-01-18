@@ -1,68 +1,58 @@
-type Node struct {
-    Children map[rune]*Node
-    Val string
-}
-
 type Trie struct {
-    Root *Node
+    children map[rune]*Trie
 }
 
 
-/** Initialize your data structure here. */
 func Constructor() Trie {
-    return Trie{
-        Root: &Node{Children: map[rune]*Node{}},
-    }
+    return Trie{children: make(map[rune]*Trie)}
 }
 
 
-/** Inserts a word into the trie. */
 func (this *Trie) Insert(word string)  {
-    node := this.Root
+    cur := this
     for _, r := range word {
-        var ok bool
-        var child *Node
-        if child, ok = node.Children[r]; !ok {            
-            child = &Node{
-                Children: map[rune]*Node{},
-            }
-            node.Children[r] = child
+        next, ok := cur.children[r]
+        if !ok {
+            n := Constructor()
+            next = &n
+            cur.children[r] = next
         }
-        
-        node = child
+
+        cur = next
     }
-    
-    node.Val = word
+
+    cur.children['*'] = nil
 }
 
 
-/** Returns if the word is in the trie. */
 func (this *Trie) Search(word string) bool {
-    node := this.Root
+    cur := this
     for _, r := range word {
-        if child, ok := node.Children[r]; ok {                
-            node = child
-        } else {
+        next, ok := cur.children[r]
+        if !ok {
             return false
-        }    
+        }
+
+        cur = next
     }
-    
-    return node.Val != ""
+
+    _, ok := cur.children['*']
+    return ok
 }
 
 
-/** Returns if there is any word in the trie that starts with the given prefix. */
 func (this *Trie) StartsWith(prefix string) bool {
-    node := this.Root
+    cur := this
     for _, r := range prefix {
-        if child, ok := node.Children[r]; ok {            
-            node = child   
-        } else {
+        next, ok := cur.children[r]
+        if !ok {
             return false
-        }    
+        }
+
+        cur = next
     }
-    
-    return true    
+
+    return true 
 }
 
 
